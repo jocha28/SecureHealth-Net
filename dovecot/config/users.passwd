@@ -1,0 +1,19 @@
+# ============================================================
+#  Dovecot — Comptes utilisateurs médicaux
+#  SecureHealth-Net
+#
+#  Format : utilisateur@domaine:{PLAIN}motdepasse
+#  IMPORTANT : En production, utiliser des mots de passe hachés
+#  Commande pour hacher : doveadm pw -s SHA512-CRYPT
+# ============================================================
+
+# Médecins
+dr.kofi@securehealth.local:{PLAIN}Medecin2024!
+dr.amina@securehealth.local:{PLAIN}Medecin2024!
+dr.jean@securehealth.local:{PLAIN}Medecin2024!
+
+# Infirmiers
+infirmier.akosua@securehealth.local:{PLAIN}Infirmier2024!
+
+# Administration médicale
+admin@securehealth.local:{PLAIN}Admin2024!

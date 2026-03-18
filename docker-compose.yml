@@ -1,0 +1,133 @@
+version: "3.9"
+
+# ============================================================
+#  SecureHealth-Net — Infrastructure de messagerie sécurisée
+#  pour les urgences médicales au Bénin
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # 1. POSTFIX — Serveur d'envoi de mails (SMTP)
+  # ----------------------------------------------------------
+  postfix:
+    build: ./postfix
+    container_name: securehealth_postfix
+    hostname: mail.securehealth.local
+    restart: unless-stopped
+    ports:
+      - "25:25"     # SMTP (réception externe)
+      - "587:587"   # SMTP Submission (envoi authentifié)
+    volumes:
+      - ./data/mail:/var/mail
+      - ./data/certs:/etc/ssl/certs/securehealth
+      - ./postfix/config:/etc/postfix/custom
+    networks:
+      securehealth_net:
+        ipv4_address: 172.20.0.2
+    environment:
+      - MAIL_DOMAIN=securehealth.local
+      - MAIL_HOSTNAME=mail.securehealth.local
+
+  # ----------------------------------------------------------
+  # 2. DOVECOT — Serveur de réception de mails (IMAP)
+  # ----------------------------------------------------------
+  dovecot:
+    build: ./dovecot
+    container_name: securehealth_dovecot
+    hostname: mail.securehealth.local
+    restart: unless-stopped
+    ports:
+      - "143:143"   # IMAP
+      - "993:993"   # IMAPS (IMAP sécurisé TLS)
+    volumes:
+      - ./data/mail:/var/mail
+      - ./data/certs:/etc/ssl/certs/securehealth
+      - ./dovecot/config:/etc/dovecot/custom
+    depends_on:
+      - postfix
+    networks:
+      securehealth_net:
+        ipv4_address: 172.20.0.3
+    environment:
+      - MAIL_DOMAIN=securehealth.local
+
+  # ----------------------------------------------------------
+  # 3. ROUNDCUBE — Interface Webmail
+  # ----------------------------------------------------------
+  roundcube:
+    build: ./roundcube
+    container_name: securehealth_webmail
+    restart: unless-stopped
+    ports:
+      - "8080:80"   # Accès webmail : http://localhost:8080
+    volumes:
+      - ./roundcube/config:/var/roundcube/config
+    depends_on:
+      - dovecot
+      - postfix
+      - roundcube_db
+    networks:
+      securehealth_net:
+        ipv4_address: 172.20.0.4
+    environment:
+      - ROUNDCUBEMAIL_DEFAULT_HOST=securehealth_dovecot
+      - ROUNDCUBEMAIL_SMTP_SERVER=securehealth_postfix
+      - ROUNDCUBEMAIL_SMTP_PORT=587
+      - ROUNDCUBEMAIL_DB_TYPE=mysql
+      - ROUNDCUBEMAIL_DB_HOST=roundcube_db
+      - ROUNDCUBEMAIL_DB_USER=roundcube
+      - ROUNDCUBEMAIL_DB_PASSWORD=securehealth2024
+      - ROUNDCUBEMAIL_DB_NAME=roundcubemail
+
+  # ----------------------------------------------------------
+  # 4. BASE DE DONNÉES — Pour Roundcube
+  # ----------------------------------------------------------
+  roundcube_db:
+    image: mysql:8.0
+    container_name: securehealth_db
+    restart: unless-stopped
+    volumes:
+      - roundcube_db_data:/var/lib/mysql
+    networks:
+      securehealth_net:
+        ipv4_address: 172.20.0.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_securehealth2024
+      - MYSQL_DATABASE=roundcubemail
+      - MYSQL_USER=roundcube
+      - MYSQL_PASSWORD=securehealth2024
+
+  # ----------------------------------------------------------
+  # 5. MONITEUR RÉSEAU — Surveillance et détection d'intrusions
+  # ----------------------------------------------------------
+  monitor:
+    build: ./monitor
+    container_name: securehealth_monitor
+    restart: unless-stopped
+    network_mode: host          # Accès direct au réseau de l'hôte
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./monitor:/app
+      - ./logs:/app/logs
+    environment:
+      - ALERT_EMAIL=admin@securehealth.local
+      - WATCH_PORTS=25,143,587,993,8080
+
+# ----------------------------------------------------------
+# RÉSEAU INTERNE ISOLÉ
+# ----------------------------------------------------------
+networks:
+  securehealth_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+# ----------------------------------------------------------
+# VOLUMES PERSISTANTS
+# ----------------------------------------------------------
+volumes:
+  roundcube_db_data:

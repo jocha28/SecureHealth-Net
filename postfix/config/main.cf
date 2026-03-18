@@ -1,0 +1,56 @@
+# ============================================================
+#  Postfix — Configuration principale (main.cf)
+#  SecureHealth-Net : Messagerie médicale interne sécurisée
+# ============================================================
+
+# --- Identité du serveur ---
+myhostname = mail.securehealth.local
+mydomain = securehealth.local
+myorigin = $mydomain
+
+# --- Interfaces d'écoute ---
+# On écoute sur toutes les interfaces (réseau Docker interne)
+inet_interfaces = all
+inet_protocols = ipv4
+
+# --- Domaines gérés localement ---
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+
+# --- Restrictions de relais ---
+# Seul le réseau interne 172.20.0.0/24 peut envoyer des mails
+mynetworks = 127.0.0.0/8 172.20.0.0/24
+
+# --- Boîtes mail ---
+home_mailbox = Maildir/
+mailbox_size_limit = 104857600    # 100 MB par boîte
+
+# --- Authentification SASL (pour le port 587) ---
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname
+broken_sasl_auth_clients = yes
+
+# --- Chiffrement TLS ---
+smtpd_tls_cert_file = /etc/ssl/certs/securehealth/server.crt
+smtpd_tls_key_file = /etc/ssl/certs/securehealth/server.key
+smtpd_use_tls = yes
+smtpd_tls_auth_only = yes
+smtpd_tls_security_level = may
+smtp_tls_security_level = may
+
+# --- Restrictions anti-spam ---
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_destination,
+    reject_unknown_recipient_domain
+
+smtpd_sender_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unknown_sender_domain
+
+# --- Logs ---
+maillog_file = /dev/stdout
