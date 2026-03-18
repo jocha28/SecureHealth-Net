@@ -13,8 +13,16 @@ myorigin = $mydomain
 inet_interfaces = all
 inet_protocols = ipv4
 
-# --- Domaines gérés localement ---
-mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+# --- Domaines gérés localement (pas le domaine médical — il est virtuel) ---
+mydestination = $myhostname, localhost.$mydomain, localhost
+
+# --- Boîtes mail virtuelles (médecins et personnel médical) ---
+virtual_mailbox_domains = securehealth.local
+virtual_mailbox_base = /var/mail
+virtual_mailbox_maps = hash:/etc/postfix/vmailbox
+virtual_minimum_uid = 8
+virtual_uid_maps = static:8
+virtual_gid_maps = static:8
 
 # --- Restrictions de relais ---
 # Seul le réseau interne 172.20.0.0/24 peut envoyer des mails
@@ -22,7 +30,8 @@ mynetworks = 127.0.0.0/8 172.25.0.0/24
 
 # --- Boîtes mail ---
 home_mailbox = Maildir/
-mailbox_size_limit = 104857600    # 100 MB par boîte
+# Taille maximale de la boîte mail : 100 MB
+mailbox_size_limit = 104857600
 
 # --- Authentification SASL (pour le port 587) ---
 smtpd_sasl_auth_enable = yes

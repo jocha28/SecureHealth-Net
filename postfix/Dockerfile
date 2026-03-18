@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y \
 
 # Copier les fichiers de configuration
 COPY config/ /etc/postfix/
+RUN postmap /etc/postfix/vmailbox
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

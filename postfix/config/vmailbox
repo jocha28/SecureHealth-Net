@@ -1,0 +1,17 @@
+# ============================================================
+#  Postfix — Table des boîtes mail virtuelles
+#  SecureHealth-Net
+#
+#  Format : utilisateur@domaine   domaine/utilisateur/Maildir/
+# ============================================================
+
+# Médecins
+dr.kofi@securehealth.local              securehealth.local/dr.kofi/Maildir/
+dr.amina@securehealth.local             securehealth.local/dr.amina/Maildir/
+dr.jean@securehealth.local              securehealth.local/dr.jean/Maildir/
+
+# Infirmiers
+infirmier.akosua@securehealth.local     securehealth.local/infirmier.akosua/Maildir/
+
+# Administration
+admin@securehealth.local                securehealth.local/admin/Maildir/

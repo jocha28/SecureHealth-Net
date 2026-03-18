@@ -71,8 +71,9 @@ services:
       securehealth_net:
         ipv4_address: 172.25.0.4
     environment:
-      - ROUNDCUBEMAIL_DEFAULT_HOST=securehealth_dovecot
-      - ROUNDCUBEMAIL_SMTP_SERVER=securehealth_postfix
+      - ROUNDCUBEMAIL_DEFAULT_HOST=ssl://securehealth_dovecot
+      - ROUNDCUBEMAIL_DEFAULT_PORT=993
+      - ROUNDCUBEMAIL_SMTP_SERVER=tls://securehealth_postfix
       - ROUNDCUBEMAIL_SMTP_PORT=587
       - ROUNDCUBEMAIL_DB_TYPE=mysql
       - ROUNDCUBEMAIL_DB_HOST=roundcube_db
