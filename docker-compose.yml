@@ -24,7 +24,7 @@ services:
       - ./postfix/config:/etc/postfix/custom
     networks:
       securehealth_net:
-        ipv4_address: 172.20.0.2
+        ipv4_address: 172.25.0.2
     environment:
       - MAIL_DOMAIN=securehealth.local
       - MAIL_HOSTNAME=mail.securehealth.local
@@ -48,7 +48,7 @@ services:
       - postfix
     networks:
       securehealth_net:
-        ipv4_address: 172.20.0.3
+        ipv4_address: 172.25.0.3
     environment:
       - MAIL_DOMAIN=securehealth.local
 
@@ -69,7 +69,7 @@ services:
       - roundcube_db
     networks:
       securehealth_net:
-        ipv4_address: 172.20.0.4
+        ipv4_address: 172.25.0.4
     environment:
       - ROUNDCUBEMAIL_DEFAULT_HOST=securehealth_dovecot
       - ROUNDCUBEMAIL_SMTP_SERVER=securehealth_postfix
@@ -91,7 +91,7 @@ services:
       - roundcube_db_data:/var/lib/mysql
     networks:
       securehealth_net:
-        ipv4_address: 172.20.0.5
+        ipv4_address: 172.25.0.5
     environment:
       - MYSQL_ROOT_PASSWORD=root_securehealth2024
       - MYSQL_DATABASE=roundcubemail
@@ -124,7 +124,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/24
+        - subnet: 172.25.0.0/24
 
 # ----------------------------------------------------------
 # VOLUMES PERSISTANTS

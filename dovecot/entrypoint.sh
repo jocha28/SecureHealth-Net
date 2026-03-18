@@ -8,15 +8,12 @@ set -e
 
 echo "[SecureHealth] Démarrage du serveur IMAP Dovecot..."
 
+# Nettoyer les sockets résiduels (évite les crashs au redémarrage)
+rm -f /var/run/dovecot/auth-* /var/run/dovecot/*.pid
+
 # Créer les dossiers de stockage des mails
 mkdir -p /var/mail
 chown -R mail:mail /var/mail
-
-# Copier le fichier des utilisateurs si présent
-if [ -f /etc/dovecot/conf.d/users.passwd ]; then
-    cp /etc/dovecot/conf.d/users.passwd /etc/dovecot/users.passwd
-    chmod 600 /etc/dovecot/users.passwd
-fi
 
 # Vérifier que le certificat TLS existe
 if [ ! -f /etc/ssl/certs/securehealth/server.crt ]; then

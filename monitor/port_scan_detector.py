@@ -140,7 +140,7 @@ def analyser_paquet(paquet):
     # --------------------------------------------------------
     # DÉTECTION 4 : Accès aux ports critiques depuis l'extérieur
     # --------------------------------------------------------
-    if port_dst in PORTS_SURVEILLES and not ip_src.startswith("172.20."):
+    if port_dst in PORTS_SURVEILLES and not ip_src.startswith("172.25."):
         log.info(
             f"ACCÈS PORT SENSIBLE | Source externe: {ip_src} | "
             f"Port: {port_dst} | Flags: {flags}"

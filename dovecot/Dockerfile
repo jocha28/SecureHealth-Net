@@ -17,7 +17,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copier les fichiers de configuration
-COPY config/ /etc/dovecot/conf.d/
+COPY config/dovecot.conf /etc/dovecot/dovecot.conf
+COPY config/10-mail.conf /etc/dovecot/conf.d/10-mail.conf
+COPY config/10-auth.conf /etc/dovecot/conf.d/10-auth.conf
+COPY config/10-ssl.conf /etc/dovecot/conf.d/10-ssl.conf
+COPY config/users.passwd /etc/dovecot/users.passwd
+RUN chmod 600 /etc/dovecot/users.passwd
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

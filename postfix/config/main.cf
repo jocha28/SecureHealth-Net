@@ -18,7 +18,7 @@ mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 
 # --- Restrictions de relais ---
 # Seul le réseau interne 172.20.0.0/24 peut envoyer des mails
-mynetworks = 127.0.0.0/8 172.20.0.0/24
+mynetworks = 127.0.0.0/8 172.25.0.0/24
 
 # --- Boîtes mail ---
 home_mailbox = Maildir/
@@ -51,6 +51,9 @@ smtpd_sender_restrictions =
     permit_mynetworks,
     permit_sasl_authenticated,
     reject_unknown_sender_domain
+
+# --- Compatibilité ---
+compatibility_level = 3.6
 
 # --- Logs ---
 maillog_file = /dev/stdout

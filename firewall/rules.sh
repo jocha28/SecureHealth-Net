@@ -8,7 +8,7 @@
 
 set -e
 
-RESEAU_INTERNE="172.20.0.0/24"
+RESEAU_INTERNE="172.25.0.0/24"
 LOG_PREFIX="[SECUREHEALTH]"
 
 echo "[$LOG_PREFIX] Application des règles de pare-feu..."
