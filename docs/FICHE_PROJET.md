@@ -73,17 +73,43 @@ mails reçus, Dovecot les lit. Toutes les communications sont **chiffrées TLS**
 passe **hachés**, et le tout est **protégé par un pare-feu et un système de détection
 d'intrusions**.
 
-## 7. Axe de différenciation
+## 7. Axe de différenciation (comparaison avec l'existant)
 
-- **Autonomie totale** : aucune dépendance au cloud ni à Internet — fonctionne en réseau
-  local isolé.
-- **Souveraineté des données** : les données de santé ne quittent jamais l'établissement.
-- **Sécurité intégrée par conception** (*security by design*) : chiffrement, authentification
-  hachée, pare-feu **et** détection d'intrusions active — pas juste une messagerie « brute ».
-- **Déploiement en une commande** : reproductible sur n'importe quel poste, sans compétences
-  d'administration système poussées.
-- **Adapté au contexte local** (Bénin) : conçu pour des environnements à connectivité limitée
-  et budget maîtrisé (logiciels 100 % libres).
+L'axe de différenciation se mesure par rapport à deux solutions existantes représentatives :
+- **Gmail / Google Workspace** — le *statu quo* actuellement utilisé dans les centres de santé.
+- **Mailcow** — la solution open-source de messagerie dockerisée la plus proche techniquement
+  (Postfix + Dovecot + webmail + antispam, orchestrés par Docker Compose).
+
+### Tableau comparatif
+
+| Critère | Gmail / Workspace | Mailcow (self-hosted) | **SecureHealth-Net** |
+|---------|-------------------|-----------------------|----------------------|
+| Hébergement des données | Cloud étranger | Serveur propre | **Serveur propre, réseau isolé** |
+| Souveraineté / secret médical | ❌ Aucune maîtrise | ✅ Maîtrisée | ✅ **Totale (LAN fermé)** |
+| Fonctionne sans Internet | ❌ Non | ⚠️ Partiel (DNS/MX publics attendus) | ✅ **Oui, 100 % hors-ligne** |
+| Détection d'intrusions réseau | ❌ Boîte noire | ⚠️ Fail2ban (logs) | ✅ **IDS paquet (Scapy) + iptables dédié** |
+| Empreinte ressources | N/A (cloud) | Lourde (~6 Go RAM, nombreux services) | ✅ **Légère (~4 Go RAM, 5 services)** |
+| Complexité de déploiement | Compte à créer | Élevée (config avancée) | ✅ **Une commande `docker compose up`** |
+| Coût | Abonnement/utilisateur | Gratuit (matériel) | ✅ **Gratuit, 100 % libre** |
+| Transparence / valeur pédagogique | ❌ Fermé | ⚠️ Config abstraite | ✅ **Configs lisibles et commentées** |
+| Richesse fonctionnelle (agenda, antivirus…) | ✅ Très riche | ✅ Riche | ⚠️ **Ciblée sur l'essentiel** |
+
+### Ce qui distingue vraiment SecureHealth-Net
+
+- **Conçu pour l'isolement** : contrairement à Mailcow (pensé pour une messagerie exposée à
+  Internet avec DNS et certificats publics), SecureHealth-Net est optimisé pour un **réseau
+  local fermé sans connectivité externe** — le cas réel d'un centre de santé au Bénin.
+- **Sécurité réseau intégrée par conception** : au-delà de l'antispam classique, il embarque
+  un **détecteur d'intrusions au niveau paquet (Scapy)** et un **pare-feu iptables explicite**
+  (scans NULL/XMAS/FIN, SYN flood, brute-force) — une dimension absente des suites mail standard.
+- **Légèreté et simplicité** : 5 services seulement, déployables en une commande sur un poste
+  modeste, là où Mailcow exige davantage de ressources et d'expertise.
+- **Transparence pédagogique** : chaque configuration est écrite à la main et commentée, ce qui
+  en fait aussi un support d'apprentissage — impossible avec une solution « boîte noire ».
+
+> En résumé : SecureHealth-Net ne cherche pas à rivaliser en fonctionnalités avec les suites
+> généralistes, mais à proposer une messagerie **souveraine, hors-ligne et sécurisée au niveau
+> réseau**, taillée pour un contexte médical à connectivité limitée.
 
 ## 8. Domaine d'application et public cible
 
