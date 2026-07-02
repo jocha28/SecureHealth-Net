@@ -105,10 +105,16 @@ iptables -A INPUT -p tcp --tcp-flags ALL NONE \
     -j LOG --log-prefix "$LOG_PREFIX SCAN-NULL: " --log-level 4
 iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
 
-# Scan XMAS (tous les flags allumés)
-iptables -A INPUT -p tcp --tcp-flags ALL ALL \
+# Scan XMAS (FIN + PSH + URG activés — paquet « sapin de Noël »)
+iptables -A INPUT -p tcp --tcp-flags ALL FIN,PSH,URG \
     -m limit --limit 3/min \
     -j LOG --log-prefix "$LOG_PREFIX SCAN-XMAS: " --log-level 4
+iptables -A INPUT -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP
+
+# Paquet avec tous les flags allumés (également anormal / furtif)
+iptables -A INPUT -p tcp --tcp-flags ALL ALL \
+    -m limit --limit 3/min \
+    -j LOG --log-prefix "$LOG_PREFIX SCAN-FULLFLAGS: " --log-level 4
 iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
 
 # Scan FIN (seulement FIN)

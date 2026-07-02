@@ -84,12 +84,12 @@ def analyser_paquet(paquet):
         enregistrer_alerte("SCAN_NULL", ip_src, port_dst)
         return
 
-    # Scan XMAS : FIN + PSH + URG activés (comme un sapin de Noël)
+    # Scan XMAS : FIN + PSH + URG activés (paquet « sapin de Noël »)
     if flags & 0x29 == 0x29:  # FIN=0x01, PSH=0x08, URG=0x20
         log.warning(
             f"SCAN XMAS détecté | Source: {ip_src} | "
             f"Port cible: {port_dst} | "
-            f"Technique: Tous les flags allumés"
+            f"Technique: Flags FIN + PSH + URG activés"
         )
         enregistrer_alerte("SCAN_XMAS", ip_src, port_dst)
         return

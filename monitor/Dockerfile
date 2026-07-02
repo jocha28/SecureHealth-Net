@@ -17,7 +17,9 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --no-cache-dir scapy==2.5.0
 
 WORKDIR /app
-COPY . /app/
+# On n'embarque que le détecteur temps réel.
+# alert.sh est un script HÔTE (voir .dockerignore) et n'a pas sa place ici.
+COPY port_scan_detector.py /app/
 
 RUN mkdir -p /app/logs
 

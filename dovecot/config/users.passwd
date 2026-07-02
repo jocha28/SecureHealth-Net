@@ -2,18 +2,19 @@
 #  Dovecot — Comptes utilisateurs médicaux
 #  SecureHealth-Net
 #
-#  Format : utilisateur@domaine:{PLAIN}motdepasse
-#  IMPORTANT : En production, utiliser des mots de passe hachés
-#  Commande pour hacher : doveadm pw -s SHA512-CRYPT
+#  Format : utilisateur@domaine:{SCHEME}hash
+#  Mots de passe hachés en SHA512-CRYPT (jamais stockés en clair).
+#  Régénérer un hash :  doveadm pw -s SHA512-CRYPT
+#                 ou :  openssl passwd -6 'MotDePasse'
 # ============================================================
 
-# Médecins
-dr.kofi@securehealth.local:{PLAIN}Medecin2024!
-dr.amina@securehealth.local:{PLAIN}Medecin2024!
-dr.jean@securehealth.local:{PLAIN}Medecin2024!
+# Médecins  (mot de passe : Medecin2024!)
+dr.kofi@securehealth.local:{SHA512-CRYPT}$6$.x2iAy0wBuLeDBxw$KRvc6KjYPCCDshRkmI0nAsojbGYfsfzm4V.Kt90Vx9wMU25.KTS.FP/AiWxRcij5br5FgsMZtCdkPUahX.eYL/
+dr.amina@securehealth.local:{SHA512-CRYPT}$6$.x2iAy0wBuLeDBxw$KRvc6KjYPCCDshRkmI0nAsojbGYfsfzm4V.Kt90Vx9wMU25.KTS.FP/AiWxRcij5br5FgsMZtCdkPUahX.eYL/
+dr.jean@securehealth.local:{SHA512-CRYPT}$6$.x2iAy0wBuLeDBxw$KRvc6KjYPCCDshRkmI0nAsojbGYfsfzm4V.Kt90Vx9wMU25.KTS.FP/AiWxRcij5br5FgsMZtCdkPUahX.eYL/
 
-# Infirmiers
-infirmier.akosua@securehealth.local:{PLAIN}Infirmier2024!
+# Infirmiers  (mot de passe : Infirmier2024!)
+infirmier.akosua@securehealth.local:{SHA512-CRYPT}$6$Q0kii8rTGyw07.dA$ufLugwbVu3H/HgAk4v7O.Bz2a0P6MlAdDaNwUOy8z9LAJGDoQ1Zklml/34/QjFWoKmtuPLHb5DUX3W5Cdrh1U/
 
-# Administration médicale
-admin@securehealth.local:{PLAIN}Admin2024!
+# Administration médicale  (mot de passe : Admin2024!)
+admin@securehealth.local:{SHA512-CRYPT}$6$u618ZQbimiKxgY1Y$.PQGSZHVXxQE.gytFDaeOl6DeJBO2t5k.ODtf1IGtHuTHcUipXFK9I.kYPXOkjXw3UxfmYOcjZvW/Tg3s/Yux1

@@ -1,14 +1,29 @@
 #!/bin/bash
 # ============================================================
-#  SecureHealth-Net — Script d'alertes réseau
-#  Surveille les logs iptables et envoie des alertes internes
+#  SecureHealth-Net — Script d'alertes pare-feu (HÔTE)
+#
+#  Compagnon de firewall/rules.sh : ce script s'exécute SUR L'HÔTE
+#  (comme les règles iptables), et NON dans un conteneur. Il lit le
+#  journal système, repère les entrées iptables préfixées [SECUREHEALTH]
+#  et génère des alertes classées (scan, brute-force, accès externe).
+#
+#  UTILISATION : sudo bash monitor/alert.sh
+#
+#  Pré-requis : firewall/rules.sh doit avoir été appliqué (règles LOG).
+#  NB : la détection applicative en temps réel (Scapy) est assurée
+#       par le conteneur monitor (port_scan_detector.py).
 # ============================================================
 
-LOG_SYSTEME="/var/log/syslog"
-LOG_ALERTES="/app/logs/alertes_firewall.log"
+# Journal système (Debian/Ubuntu : /var/log/syslog ; Fedora/RHEL : /var/log/messages)
+LOG_SYSTEME="${SYSLOG_PATH:-/var/log/syslog}"
+[ -f "$LOG_SYSTEME" ] || LOG_SYSTEME="/var/log/messages"
+
+# Répertoire de logs du projet (relatif au dépôt)
+LOG_DIR="${LOG_DIR:-logs}"
+LOG_ALERTES="$LOG_DIR/alertes_firewall.log"
 EMAIL_ADMIN="${ALERT_EMAIL:-admin@securehealth.local}"
 
-mkdir -p /app/logs
+mkdir -p "$LOG_DIR"
 
 echo "[SecureHealth] Surveillance des logs iptables démarrée..."
 echo "[SecureHealth] Alertes envoyées à : $EMAIL_ADMIN"

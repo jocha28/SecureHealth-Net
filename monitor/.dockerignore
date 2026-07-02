@@ -1,0 +1,5 @@
+# alert.sh est un script HÔTE (compagnon de firewall/rules.sh),
+# il ne doit pas être embarqué dans l'image du conteneur.
+alert.sh
+Dockerfile
+logs/

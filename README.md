@@ -142,6 +142,10 @@ L'infrastructure est prête en 2 à 3 minutes au premier lancement.
 | `infirmier.akosua@securehealth.local` | `Infirmier2024!` | Infirmier |
 | `admin@securehealth.local` | `Admin2024!` | Administrateur |
 
+> 🔒 Les mots de passe sont stockés **hachés (SHA512-CRYPT)** dans
+> `dovecot/config/users.passwd`, jamais en clair. Le tableau ci-dessus
+> indique les identifiants de connexion pour la démonstration.
+
 ---
 
 ## Pare-feu
@@ -165,6 +169,10 @@ sudo bash firewall/rules.sh
 
 ## Surveillance réseau
 
+La surveillance repose sur **deux niveaux complémentaires** :
+
+**1. Détection applicative en temps réel (conteneur Scapy)**
+
 ```bash
 # Logs en direct
 docker logs -f securehealth_monitor
@@ -173,6 +181,18 @@ docker logs -f securehealth_monitor
 # logs/securehealth_monitor.log  → Activité générale
 # logs/alertes.log               → Alertes de sécurité
 ```
+
+**2. Alertes pare-feu (script hôte, complément de `firewall/rules.sh`)**
+
+```bash
+# À lancer sur l'hôte, après avoir appliqué le pare-feu
+sudo bash monitor/alert.sh
+
+# logs/alertes_firewall.log       → Entrées iptables [SECUREHEALTH]
+```
+
+Le script lit le journal système, repère les paquets bloqués par iptables
+(préfixe `[SECUREHEALTH]`) et les classe (scan, brute-force, accès externe).
 
 **Exemple de détection :**
 

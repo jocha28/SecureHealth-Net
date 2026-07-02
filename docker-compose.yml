@@ -1,5 +1,3 @@
-version: "3.9"
-
 # ============================================================
 #  SecureHealth-Net — Infrastructure de messagerie sécurisée
 #  pour les urgences médicales au Bénin
@@ -21,7 +19,6 @@ services:
     volumes:
       - ./data/mail:/var/mail
       - ./data/certs:/etc/ssl/certs/securehealth
-      - ./postfix/config:/etc/postfix/custom
     networks:
       securehealth_net:
         ipv4_address: 172.25.0.2
@@ -43,7 +40,6 @@ services:
     volumes:
       - ./data/mail:/var/mail
       - ./data/certs:/etc/ssl/certs/securehealth
-      - ./dovecot/config:/etc/dovecot/custom
     depends_on:
       - postfix
     networks:
